@@ -1,0 +1,415 @@
+﻿:root {
+  color-scheme: light dark;
+  --text: black;
+  --text-h2: #B22;
+  --background: #F8F8F8;
+  --background-soft: #EEE;
+  --background-code: #E6E6E6;
+  --background-warning: #FAEBD7;
+  --line: black;
+  --line-soft: #BBB;
+  --hover: #FFB;
+  --font-sans: 'Segoe UI', sans-serif;
+  --font-monospace: 'Lucida Console', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: white;
+    --text-h2: #FF725E;
+    --background: #202020;
+    --background-soft: #333;
+    --background-code: #303030;
+    --background-warning: #651428;
+    --line: #575757;
+    --line-soft: #676767;
+    --hover: #335;
+  }
+}
+
+ul.toc {
+  padding: 5px;
+  margin: 5px;
+  border: 1px solid var(--line);
+  background: var(--background-soft);
+  list-style-type: none;
+  display: inline-block;
+}
+
+  ul.toc ul {
+    display: none;
+  }
+
+.Good, .Good * {
+  color: black !important;
+  background-color: rgb(204, 255, 204) !important;
+}
+
+.Bad, .Bad * {
+  color: black !important;
+  background-color: rgb(255, 221, 221) !important;
+}
+
+body > del, div > del {
+  background-color: rgb(255, 221, 221);
+  display: block;
+}
+
+body > ins, div > ins {
+  background-color: rgb(204, 255, 204);
+  display: block;
+}
+
+table {
+  margin-bottom: 2px;
+}
+
+table, tfoot, tbody, tr, td, th {
+  border-collapse: collapse;
+  border: 1px solid var(--line);
+}
+
+td, th {
+  padding: 4px 4px;
+}
+
+.Menupath {
+  font-variant: small-caps;
+  font-style: normal;
+}
+
+  .Menupath span:not(:first-child)::before {
+    content: "→\0000A0";
+  }
+
+a img {
+  border: none;
+  margin: 10px;
+}
+
+img.Portrait {
+  text-align: right;
+  float: right;
+  margin: 10px;
+  border: thin solid var(--line);
+}
+
+img.Logo {
+  text-align: right;
+  float: right;
+}
+
+img.Screenshot, img.Foto {
+  margin: auto;
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  height: auto;
+}
+
+img {
+  max-width: 100%;
+}
+
+  img.Foto {
+    border: thin solid #000;
+  }
+
+  img.ShadowBorder {
+    box-shadow: 0 0 5px 5px grey;
+  }
+
+code, textarea, input[type="text"] {
+  font-family: var(--font-monospace);
+}
+
+:not(h1, h2, h3, h4, h5, h6, pre, a) > code {
+  padding: 0.2em 0.4em;
+  border-radius: 5px;
+}
+
+:not(a, h1, h2, h3, h4, h5, h6, pre) > code {
+  color: var(--text);
+  background-color: var(--background-code);
+}
+
+.Code {
+  margin: 0.5em;
+  position: relative;
+}
+
+  .Code > pre {
+    border: thin solid var(--line);
+    overflow: auto;
+    padding: 1.5em;
+    margin: 0;
+    color: var(--text);
+    background-color: var(--background-soft);
+    display: block;
+  }
+
+  .Code a.DownloadLink {
+    padding: 0.3em;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    border: thin solid var(--line);
+    border-bottom-left-radius: 10px;
+    background-color: var(--background);
+  }
+
+    .Code a.DownloadLink::before {
+      content: "↓\0000A0";
+    }
+
+  .Code.dos > pre {
+    color: rgb(204, 204, 204);
+    background-color: rgb(0,0,0);
+  }
+
+  .Code.dos > * {
+    border-color: rgb(0,0,0);
+  }
+
+  .Code.powershell > pre {
+    color: rgb(238, 237, 240);
+    background-color: rgb(1,36,86);
+  }
+
+  .Code.powershell > * {
+    border-color: rgb(1,36,86);
+  }
+
+  .Code.preline > pre {
+    white-space: pre-line;
+  }
+
+.nowrap {
+  white-space: nowrap;
+  text-wrap-mode: nowrap;
+}
+
+blockquote p {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+html, body {
+  color: var(--text);
+  background: var(--background);
+  font-family: var(--font-sans);
+  tab-size: 4;
+}
+
+h1 {
+  color: white;
+  background: hsl(218deg, 66%, 60%) linear-gradient(to right, hsl(218deg, 66%, 60%), hsl(218deg, 66%, 40%));
+  padding: 4px;
+  padding-left: 5%;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+h2 {
+  color: var(--text-h2);
+  background: var(--background);
+}
+
+li {
+  margin-top: 0.3em;
+  margin-bottom: 0.3em;
+}
+
+ul {
+  list-style-type: disc;
+}
+
+  ul li ul, ol li ul {
+    list-style-type: circle;
+  }
+
+    ul li ul li ul {
+      list-style-type: square;
+    }
+
+      ul li ul li ul li ul {
+        list-style-type: none;
+      }
+
+abbr[title], acronym[title] {
+  cursor: help;
+}
+
+[lang|='de'] > * {
+  quotes: "„" "“" "‚" "‘";
+}
+
+div.note, div.warning {
+  border: 1px solid var(--line-soft);
+  margin: 0.7em;
+  padding: 0.5em;
+  border-radius: 10px;
+  background-color: var(--background-warning);
+}
+
+  div.note > p, div.warning > p {
+    margin: 5px 0;
+  }
+
+  div.note *, div.warning * {
+    background-color: var(--background-warning);
+  }
+
+.note::before, .warning::before {
+  font-size: 1.2em;
+  display: block;
+}
+
+*[lang|='de'] .note::before {
+  content: "⚠ Hinweis";
+}
+
+*[lang|='en'] .note::before {
+  content: "⚠ Note";
+}
+
+*[lang|='de'] .warning::before {
+  content: "⚠ Achtung";
+}
+
+*[lang|='en'] .warning::before {
+  content: "⚠ Warning";
+}
+
+q::before {
+  content: open-quote;
+}
+
+q::after {
+  content: close-quote;
+}
+
+em.Ironie, em.Name, dfn, q {
+  font-style: normal;
+}
+
+a[href^="http:"]::before, a[href^="https:"]::before, a[href^="ftp:"]::before {
+  content: "↗\0000A0";
+}
+
+a[href^="mailto:"]::before, a[href^="news:"]::before {
+  content: "✉\0000A0";
+}
+
+.Footer {
+  margin-top: 2em;
+  padding: 0.5em;
+  clear: both;
+  color: var(--text);
+  background-color: var(--background-soft);
+  border-top: thin solid var(--line);
+}
+
+.Summary {
+  padding: 10px;
+  font-weight: bold;
+}
+
+a:hover {
+  background: var(--hover) !important;
+}
+
+.Breadcrumb {
+  text-align: left;
+  color: var(--text);
+  background: var(--background-soft);
+  padding: 5px;
+  margin-top: 0px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+fieldset {
+  border-color: var(--line-soft);
+  border-radius: 10px;
+}
+
+ul.DirectoryListing, ul.DirectoryListing * {
+  font-family: var(--font-monospace);
+  list-style-type: none;
+}
+
+  ul.DirectoryListing .Folder::before, ul.DirectoryListing .OpenFolder::before, ul.DirectoryListing .File::before {
+    display: inline-block;
+    width: 30px;
+    text-align: center;
+  }
+
+  ul.DirectoryListing .Folder::before {
+    content: "🗀";
+  }
+
+  ul.DirectoryListing .OpenFolder::before {
+    content: "🗁";
+  }
+
+  ul.DirectoryListing .File::before {
+    content: "🗎";
+  }
+
+h2 > a, h3 > a {
+  text-decoration: inherit !important;
+  color: inherit !important;
+  display: block;
+}
+
+  h2 > a::after, h3 > a::after {
+    content: " #";
+    visibility: hidden;
+  }
+
+h2:hover > a, h3:hover > a {
+  content: " #";
+  text-decoration: underline;
+}
+
+  h2:hover > a::after, h3:hover > a::after {
+    visibility: visible;
+  }
+
+*:target > a::before {
+  content: " » ";
+  font-size: 1.3em;
+}
+
+span.Guide {
+  display: inline-grid;
+  align-items: center;
+  border-radius: 5px;
+  margin: 3px;
+  padding: 2px 10px;
+  min-height: 42px;
+  border: 1px dashed var(--text);
+}
+
+/* Google Translate Widget tweaks */
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+body {
+  top: 0px !important;
+}
+.goog-tooltip {
+  display: none !important;
+}
+.goog-tooltip:hover {
+  display: none !important;
+}
+.goog-text-highlight {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+#goog-gt-tt {
+  display: none !important;
+}
