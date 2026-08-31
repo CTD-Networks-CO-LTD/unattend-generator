@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   color-scheme: light dark;
   --text: black;
   --text-h2: #B22;
@@ -204,8 +204,7 @@ html, body {
 h1 {
   color: white;
   background: hsl(218deg, 66%, 60%) linear-gradient(to right, hsl(218deg, 66%, 60%), hsl(218deg, 66%, 40%));
-  padding: 4px;
-  padding-left: 5%;
+  padding: 10px 4px 10px 5%;
   margin-top: 0px;
   margin-bottom: 0px;
 }
@@ -394,10 +393,7 @@ span.Guide {
 
 /* Google Translate Widget tweaks */
 .goog-te-banner-frame.skiptranslate {
-  display: none !important;
-}
-body {
-  top: 0px !important;
+  display: block !important;
 }
 .goog-tooltip {
   display: none !important;
