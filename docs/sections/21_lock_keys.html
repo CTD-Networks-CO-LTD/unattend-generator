@@ -1,0 +1,74 @@
+      <tr>
+        <th>Lock key settings:</th>
+        <td>
+          <div class="IndentContainer">
+            <label class="radio">
+              <input type="radio" name="LockKeysMode" value="Skip" checked="checked" />
+              <span>Use default lock key states and behaviors</span>
+            </label>
+          </div>
+
+          <div class="IndentContainer">
+            <label class="radio">
+              <input type="radio" name="LockKeysMode" value="Configure" />
+              <span>Configure the initial state and behavior of lock keys as follows:</span>
+            </label>
+            <fieldset>
+              <table>
+  <tr>
+    <th>Key</th>
+    <th>Initial state</th>
+    <th>When pressed</th>
+  </tr>
+  <tr>
+    <td>Caps Lock</td>
+    <td>
+      <select translate="no" class="notranslate" name="CapsLockInitial">
+        <option translate="no" class="notranslate" value="Off" selected="selected">Off</option>
+        <option translate="no" class="notranslate" value="On">On</option>
+      </select>
+    </td>
+    <td>
+      <select translate="no" class="notranslate" name="CapsLockBehavior">
+        <option translate="no" class="notranslate" value="Toggle" selected="selected">Toggle state</option>
+        <option translate="no" class="notranslate" value="Ignore">Ignore keystroke</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td>Num Lock</td>
+    <td>
+      <select translate="no" class="notranslate" name="NumLockInitial">
+        <option translate="no" class="notranslate" value="Off" selected="selected">Off</option>
+        <option translate="no" class="notranslate" value="On">On</option>
+      </select>
+    </td>
+    <td>
+      <select translate="no" class="notranslate" name="NumLockBehavior">
+        <option translate="no" class="notranslate" value="Toggle" selected="selected">Toggle state</option>
+        <option translate="no" class="notranslate" value="Ignore">Ignore keystroke</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td>Scroll Lock</td>
+    <td>
+      <select translate="no" class="notranslate" name="ScrollLockInitial">
+        <option translate="no" class="notranslate" value="Off" selected="selected">Off</option>
+        <option translate="no" class="notranslate" value="On">On</option>
+      </select>
+    </td>
+    <td>
+      <select translate="no" class="notranslate" name="ScrollLockBehavior">
+        <option translate="no" class="notranslate" value="Toggle" selected="selected">Toggle state</option>
+        <option translate="no" class="notranslate" value="Ignore">Ignore keystroke</option>
+      </select>
+    </td>
+  </tr>
+</table>
+            </fieldset>
+          </div>
+
+          <div>This will affect all users and also the login screen.</div>
+        </td>
+      </tr>
