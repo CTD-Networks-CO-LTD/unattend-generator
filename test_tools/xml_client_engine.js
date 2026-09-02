@@ -80,16 +80,35 @@
       accounts.push({ name: 'Example', displayName: 'Example User', group: 'Administrators', password: '' });
     }
 
+    const isJapanese = (keyboard === '00000411' || keyboard.startsWith('0411:') || locale === 'ja-JP');
+    const inputLocStr = (keyboard.indexOf('{') === -1 && keyboard.length === 8) ? `${keyboard.substring(4)}:${keyboard}` : keyboard;
+
     const xmlLines = [
       '<?xml version="1.0" encoding="utf-8"?>',
       '<unattend xmlns="urn:schemas-microsoft-com:unattend" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">',
       '  <settings pass="windowsPE">',
-      '    <component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">',
-      `      <SetupUILanguage><UILanguage>${locale}</UILanguage></SetupUILanguage>`,
-      `      <InputLocale>${keyboard}</InputLocale>`,
-      `      <SystemLocale>${locale}</SystemLocale>`,
-      `      <UILanguage>${locale}</UILanguage>`,
-      `      <UserLocale>${locale}</UserLocale>`,
+      '    <component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">'
+    ];
+
+    if (isJapanese) {
+      xmlLines.push(
+        `      <InputLocale>${inputLocStr}</InputLocale>`,
+        `      <SystemLocale>${locale}</SystemLocale>`,
+        `      <UILanguage>${locale}</UILanguage>`,
+        `      <UserLocale>${locale}</UserLocale>`,
+        '      <LayeredDriver>6</LayeredDriver>'
+      );
+    } else {
+      xmlLines.push(
+        `      <SetupUILanguage><UILanguage>${locale}</UILanguage></SetupUILanguage>`,
+        `      <InputLocale>${inputLocStr}</InputLocale>`,
+        `      <SystemLocale>${locale}</SystemLocale>`,
+        `      <UILanguage>${locale}</UILanguage>`,
+        `      <UserLocale>${locale}</UserLocale>`
+      );
+    }
+
+    xmlLines.push(
       '    </component>',
       '    <component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">',
       '      <UserData>',
@@ -105,15 +124,22 @@
       '  </settings>',
       '  <settings pass="oobeSystem">',
       '    <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">',
-      `      <InputLocale>${keyboard}</InputLocale>`,
+      `      <InputLocale>${inputLocStr}</InputLocale>`,
       `      <SystemLocale>${locale}</SystemLocale>`,
       `      <UILanguage>${locale}</UILanguage>`,
-      `      <UserLocale>${locale}</UserLocale>`,
+      `      <UserLocale>${locale}</UserLocale>`
+    );
+
+    if (isJapanese) {
+      xmlLines.push('      <LayeredDriver>6</LayeredDriver>');
+    }
+
+    xmlLines.push(
       `      <GeoLocation>${geoLoc}</GeoLocation>`,
       '    </component>',
       '    <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">',
       '      <UserAccounts>'
-    ];
+    );
 
     if (accounts.length > 0) {
       xmlLines.push('        <LocalAccounts>');

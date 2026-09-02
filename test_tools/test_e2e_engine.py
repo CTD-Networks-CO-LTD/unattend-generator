@@ -35,16 +35,16 @@ def run_xml_generator_test():
         print(f"  - {k}: {v}")
         
     print("\n生成される autounattend.xml の検証:")
-    # XML構築シミュレーション
+    # XML構築シミュレーション（日本語キーボード設定対応）
     xml_output = f"""<?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
   <settings pass="windowsPE">
     <component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-      <SetupUILanguage><UILanguage>{sample_config['Locale']}</UILanguage></SetupUILanguage>
-      <InputLocale>{sample_config['Keyboard']}</InputLocale>
+      <InputLocale>0411:{sample_config['Keyboard']}</InputLocale>
       <SystemLocale>{sample_config['Locale']}</SystemLocale>
       <UILanguage>{sample_config['Locale']}</UILanguage>
       <UserLocale>{sample_config['Locale']}</UserLocale>
+      <LayeredDriver>6</LayeredDriver>
     </component>
   </settings>
   <settings pass="specialize">
@@ -54,6 +54,14 @@ def run_xml_generator_test():
     </component>
   </settings>
   <settings pass="oobeSystem">
+    <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <InputLocale>0411:{sample_config['Keyboard']}</InputLocale>
+      <SystemLocale>{sample_config['Locale']}</SystemLocale>
+      <UILanguage>{sample_config['Locale']}</UILanguage>
+      <UserLocale>{sample_config['Locale']}</UserLocale>
+      <LayeredDriver>6</LayeredDriver>
+      <GeoLocation>{sample_config['GeoLocation']}</GeoLocation>
+    </component>
     <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
       <UserAccounts>
         <LocalAccounts>
@@ -73,9 +81,11 @@ def run_xml_generator_test():
 </unattend>"""
     
     assert "<UILanguage>ja-JP</UILanguage>" in xml_output
+    assert "<LayeredDriver>6</LayeredDriver>" in xml_output
+    assert "<InputLocale>0411:00000411</InputLocale>" in xml_output
     assert "<ComputerName>TEST-PC</ComputerName>" in xml_output
     assert "<Name>AdminUser</Name>" in xml_output
-    print("[PASS] XML構文および設定値の埋め込みが正常です。")
+    print("[PASS] XML構文および設定値の埋め込み（日本語キーボードLayeredDriver含む）が正常です。")
     print("=" * 60)
     return True
 
