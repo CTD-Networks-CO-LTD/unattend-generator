@@ -19,7 +19,7 @@
 PowerShellにて以下を実行します。
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\tools\interactive_test.ps1
+powershell -ExecutionPolicy Bypass -File .\test_tools\interactive_test.ps1
 ```
 
 起動後、以下のメニューが表示されます：
@@ -35,11 +35,12 @@ powershell -ExecutionPolicy Bypass -File .\tools\interactive_test.ps1
 
 ```bash
 # 全ボタンの一括検証
-python tools/verify_buttons.py verify
+python test_tools/verify_buttons.py verify
 
 # 個別ボタンのシミュレーション例 (Bookmark)
-python tools/verify_buttons.py sim:bookmark
+python test_tools/verify_buttons.py sim:bookmark
 
 # 個別ボタンのシミュレーション例 (Download)
-python tools/verify_buttons.py sim:download
+python test_tools/verify_buttons.py sim:download
 ```
+
