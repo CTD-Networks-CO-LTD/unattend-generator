@@ -5,6 +5,13 @@ import os
 import sys
 import re
 from bs4 import BeautifulSoup
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 import urllib.parse
 
 DOCS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "docs"))
