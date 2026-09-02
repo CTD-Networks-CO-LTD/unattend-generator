@@ -579,8 +579,7 @@ class OptimizationsModifier(ModifierContext context) : Modifier(context)
     }
     if (Configuration.MakeEdgeUninstallable)
     {
-      string ps1File = EmbedTextFileFromResource("MakeEdgeUninstallable.ps1");
-      SpecializeScript.InvokeFile(ps1File);
+      SpecializeScript.InvokeFile(EmbedTextFileFromResource("MakeEdgeUninstallable.ps1"));
     }
     {
       if (Configuration.LaunchToThisPC)
