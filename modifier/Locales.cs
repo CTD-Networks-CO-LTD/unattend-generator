@@ -92,21 +92,21 @@ class LocalesModifier(ModifierContext context) : Modifier(context)
             Util.NewSimpleElement("SystemLocale", (System.Xml.XmlElement)componentPe, settings.LocaleAndKeyboard.Locale.Id, Document, NamespaceManager);
             Util.NewSimpleElement("UILanguage", (System.Xml.XmlElement)componentPe, settings.ImageLanguage.Id, Document, NamespaceManager);
             Util.NewSimpleElement("UserLocale", (System.Xml.XmlElement)componentPe, settings.LocaleAndKeyboard.Locale.Id, Document, NamespaceManager);
-            Util.NewSimpleElement("LayeredDriver", (System.Xml.XmlElement)componentPe, "6", Document, NamespaceManager);
+            Util.NewSimpleElement("LayeredDriver", (System.Xml.XmlElement)componentPe, "1", Document, NamespaceManager);
 
             componentOobe.SelectSingleNodeOrThrow("u:InputLocale", NamespaceManager).InnerText = keyboards;
             componentOobe.SelectSingleNodeOrThrow("u:SystemLocale", NamespaceManager).InnerText = settings.LocaleAndKeyboard.Locale.Id;
             componentOobe.SelectSingleNodeOrThrow("u:UILanguage", NamespaceManager).InnerText = settings.ImageLanguage.Id;
             componentOobe.SelectSingleNodeOrThrow("u:UserLocale", NamespaceManager).InnerText = settings.LocaleAndKeyboard.Locale.Id;
-            Util.NewSimpleElement("LayeredDriver", (System.Xml.XmlElement)componentOobe, "6", Document, NamespaceManager);
 
             SpecializeScript.Append(@"$regPath = 'HKLM:\SYSTEM\CurrentControlSet\Services\i8042prt\Parameters';
-if (Test-Path $regPath) {
-    Set-ItemProperty -Path $regPath -Name 'LayerDriver JPN' -Value 'kbd106.dll' -Type String -Force;
-    Set-ItemProperty -Path $regPath -Name 'OverrideKeyboardIdentifier' -Value 'PCAT_106KEY' -Type String -Force;
-    Set-ItemProperty -Path $regPath -Name 'OverrideKeyboardSubtype' -Value 2 -Type DWord -Force;
-    Set-ItemProperty -Path $regPath -Name 'OverrideKeyboardType' -Value 7 -Type DWord -Force;
-}");
+if (!(Test-Path $regPath)) {
+    New-Item -Path $regPath -Force | Out-Null;
+}
+Set-ItemProperty -Path $regPath -Name 'LayerDriver JPN' -Value 'kbd106.dll' -Type String -Force;
+Set-ItemProperty -Path $regPath -Name 'OverrideKeyboardIdentifier' -Value 'PCAT_106KEY' -Type String -Force;
+Set-ItemProperty -Path $regPath -Name 'OverrideKeyboardSubtype' -Value 2 -Type DWord -Force;
+Set-ItemProperty -Path $regPath -Name 'OverrideKeyboardType' -Value 7 -Type DWord -Force;");
           }
           else
           {
