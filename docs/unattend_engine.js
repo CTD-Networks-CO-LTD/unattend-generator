@@ -180,10 +180,11 @@
 
     if (this.children.length === 1 && this.children[0].isText) {
       var txt = this.children[0].textValue;
-      if (txt.indexOf('\n') === -1) {
+      if (this.name !== 'File' && this.name !== 'ExtractScript' && txt.indexOf('\n') === -1) {
         return indent + '<' + this.name + attrStr + '>' + escapeXmlText(txt) + '</' + this.name + '>';
       } else {
-        var lines = txt.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+        var cleanTxt = txt.replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim();
+        var lines = cleanTxt ? cleanTxt.split('\n') : [];
         var res = indent + '<' + this.name + attrStr + '>\r\n';
         for (var j = 0; j < lines.length; j++) {
           res += escapeXmlText(lines[j]) + '\r\n';
@@ -286,6 +287,39 @@
     '}'
   ].join('\r\n');
 
+  var SET_COMPUTER_NAME_PS1 = [
+    "$ErrorActionPreference = 'Stop';",
+    "Set-StrictMode -Version 'Latest';",
+    '& {',
+    "\t$newName = ( Get-Content -LiteralPath 'C:\\Windows\\Setup\\Scripts\\ComputerName.txt' -Raw ).Trim();",
+    '\tif( [string]::IsNullOrWhitespace( $newName ) ) {',
+    '\t\tthrow "No computer name was provided.";',
+    '\t}',
+    '',
+    '\t$keys = @(',
+    '\t\t@{',
+    "\t\t\tLiteralPath = 'Registry::HKLM\\SYSTEM\\CurrentControlSet\\Control\\ComputerName\\ComputerName';",
+    "\t\t\tName = 'ComputerName';",
+    '\t\t};',
+    '\t\t@{',
+    "\t\t\tLiteralPath = 'Registry::HKLM\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters';",
+    "\t\t\tName = 'Hostname';",
+    '\t\t};',
+    '\t\t@{',
+    "\t\t\tLiteralPath = 'Registry::HKLM\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters';",
+    "\t\t\tName = 'NV Hostname';",
+    '\t\t};',
+    '\t);',
+    '',
+    '\twhile( $true ) {',
+    '\t\tforeach( $key in $keys ) {',
+    "\t\t\tSet-ItemProperty @key -Type 'String' -Value $newName;",
+    '\t\t}',
+    '\t\tStart-Sleep -Milliseconds 50;',
+    '\t}',
+    "} *>&1 | Out-String -Width 1KB -Stream >> 'C:\\Windows\\Setup\\Scripts\\SetComputerName.log';"
+  ].join('\r\n');
+
   // Generate full autounattend.xml from FormData or query string
   function generateAutounattendXml(formData) {
     var getVal = function (name, def) {
@@ -355,6 +389,26 @@
       accounts.push({ name: 'User', displayName: '', group: 'Users', password: '' });
     }
 
+    // Computer Name (ComputerNameModifier before Password/Lockout in C#)
+    var compNameMode = getVal('ComputerNameMode', 'Random');
+    var customCompName = getVal('ComputerName', '');
+    var compNameScript = getVal('ComputerNameScript', '');
+    var specCompName = null;
+    if (compNameMode === 'Custom' && customCompName) {
+      specCompName = customCompName;
+    } else if (compNameMode === 'Script' && compNameScript) {
+      specCompName = 'TEMPNAME';
+      var getterFile = embedTextFile('GetComputerName.ps1', compNameScript);
+      var setterFile = embedTextFile('SetComputerName.ps1', SET_COMPUTER_NAME_PS1);
+      specializeScript.append([
+        "[string] $newName = & '" + getterFile + "';",
+        "$newName > 'C:\\Windows\\Setup\\Scripts\\ComputerName.txt';",
+        '"Will set the computer name to \'${newName}\'.";',
+        'Start-Process -FilePath ( Get-Process -Id $PID ).Path -ArgumentList \'-ExecutionPolicy "Unrestricted" -NoProfile -File "' + setterFile + '"\' -WindowStyle \'Hidden\';',
+        'Start-Sleep -Seconds 10;'
+      ].join('\r\n'));
+    }
+
     // Password & Lockout Policies
     var pwExpMode = getVal('PasswordExpirationMode', 'Unlimited');
     if (pwExpMode === 'Unlimited') {
@@ -372,25 +426,6 @@
       var dur = getVal('LockoutDuration', '30');
       var win = getVal('LockoutWindow', '30');
       specializeScript.append('net.exe accounts /lockoutthreshold:' + thresh + ' /lockoutduration:' + dur + ' /lockoutwindow:' + win + ';');
-    }
-
-    // Computer Name
-    var compNameMode = getVal('ComputerNameMode', 'Random');
-    var customCompName = getVal('ComputerName', '');
-    var compNameScript = getVal('ComputerNameScript', '');
-    var specCompName = null;
-    if (compNameMode === 'Custom' && customCompName) {
-      specCompName = customCompName;
-    } else if (compNameMode === 'Script' && compNameScript) {
-      specCompName = 'TEMPNAME';
-      var getterFile = embedTextFile('GetComputerName.ps1', compNameScript);
-      specializeScript.append([
-        "[string] $newName = & '" + getterFile + "';",
-        "$newName > 'C:\\Windows\\Setup\\Scripts\\ComputerName.txt';",
-        '"Will set the computer name to \'${newName}\'.";',
-        'Start-Process -FilePath ( Get-Process -Id $PID ).Path -ArgumentList \'-ExecutionPolicy "Unrestricted" -NoProfile -File "C:\\Windows\\Setup\\Scripts\\SetComputerName.ps1"\' -WindowStyle \'Hidden\';',
-        'Start-Sleep -Seconds 10;'
-      ].join('\r\n'));
     }
 
     // TimeZone
@@ -619,6 +654,22 @@
 
     // 4. pass="specialize"
     var specSettingsElem = root.addChild(new XmlNode('settings', { 'pass': 'specialize' }));
+    if (specCompName || (tzMode === 'Explicit' && tzId)) {
+      var specShell = specSettingsElem.addChild(new XmlNode('component', {
+        'name': 'Microsoft-Windows-Shell-Setup',
+        'processorArchitecture': arch,
+        'publicKeyToken': '31bf3856ad364e35',
+        'language': 'neutral',
+        'versionScope': 'nonSxS'
+      }));
+      if (specCompName) {
+        specShell.addSimpleElement('ComputerName', specCompName);
+      }
+      if (tzMode === 'Explicit' && tzId) {
+        specShell.addSimpleElement('TimeZone', tzId);
+      }
+    }
+
     if (hasExtractScript || specializeFile) {
       var specDeploy = specSettingsElem.addChild(new XmlNode('component', {
         'name': 'Microsoft-Windows-Deployment',
@@ -641,22 +692,6 @@
       }
     }
 
-    if (specCompName || (tzMode === 'Explicit' && tzId)) {
-      var specShell = specSettingsElem.addChild(new XmlNode('component', {
-        'name': 'Microsoft-Windows-Shell-Setup',
-        'processorArchitecture': arch,
-        'publicKeyToken': '31bf3856ad364e35',
-        'language': 'neutral',
-        'versionScope': 'nonSxS'
-      }));
-      if (specCompName) {
-        specShell.addSimpleElement('ComputerName', specCompName);
-      }
-      if (tzMode === 'Explicit' && tzId) {
-        specShell.addSimpleElement('TimeZone', tzId);
-      }
-    }
-
     // 5. pass="auditSystem"
     root.addChild(new XmlNode('settings', { 'pass': 'auditSystem' }));
 
@@ -675,7 +710,7 @@
       }));
 
       var inputLocStr = keyboard;
-      if (keyboard.length === 8 && !keyboard.startsWith('00000411') && !keyboard.startsWith('00000412')) {
+      if (keyboard.indexOf('{') === -1 && keyboard.length === 8) {
         var lcidPrefix = keyboard.substring(4);
         inputLocStr = lcidPrefix + ':' + keyboard;
       }
@@ -783,7 +818,11 @@
       var it = formData.entries();
       var entry = it.next();
       while (!entry.done) {
-        qParams.push(encodeURIComponent(entry.value[0]) + '=' + encodeURIComponent(entry.value[1]));
+        var k = entry.value[0];
+        var v = entry.value[1];
+        var encK = encodeURIComponent(k).replace(/%20/g, '+').replace(/[!'()*]/g, function (c) { return '%' + c.charCodeAt(0).toString(16).toUpperCase(); });
+        var encV = encodeURIComponent(v).replace(/%20/g, '+').replace(/[!'()*]/g, function (c) { return '%' + c.charCodeAt(0).toString(16).toUpperCase(); });
+        qParams.push(encK + '=' + encV);
         entry = it.next();
       }
       queryString = qParams.join('&');
