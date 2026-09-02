@@ -574,12 +574,13 @@
     if (isJapaneseKeyboard) {
       specializeScript.append([
         "$regPath = 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\i8042prt\\Parameters';",
-        "if (Test-Path $regPath) {",
-        "    Set-ItemProperty -Path $regPath -Name 'LayerDriver JPN' -Value 'kbd106.dll' -Type String -Force;",
-        "    Set-ItemProperty -Path $regPath -Name 'OverrideKeyboardIdentifier' -Value 'PCAT_106KEY' -Type String -Force;",
-        "    Set-ItemProperty -Path $regPath -Name 'OverrideKeyboardSubtype' -Value 2 -Type DWord -Force;",
-        "    Set-ItemProperty -Path $regPath -Name 'OverrideKeyboardType' -Value 7 -Type DWord -Force;",
-        "}"
+        "if (!(Test-Path $regPath)) {",
+        "    New-Item -Path $regPath -Force | Out-Null;",
+        "}",
+        "Set-ItemProperty -Path $regPath -Name 'LayerDriver JPN' -Value 'kbd106.dll' -Type String -Force;",
+        "Set-ItemProperty -Path $regPath -Name 'OverrideKeyboardIdentifier' -Value 'PCAT_106KEY' -Type String -Force;",
+        "Set-ItemProperty -Path $regPath -Name 'OverrideKeyboardSubtype' -Value 2 -Type DWord -Force;",
+        "Set-ItemProperty -Path $regPath -Name 'OverrideKeyboardType' -Value 7 -Type DWord -Force;"
       ].join('\r\n'));
     }
 
@@ -634,7 +635,7 @@
         peIntl.addSimpleElement('SystemLocale', locale);
         peIntl.addSimpleElement('UILanguage', uiLang);
         peIntl.addSimpleElement('UserLocale', locale);
-        peIntl.addSimpleElement('LayeredDriver', '6');
+        peIntl.addSimpleElement('LayeredDriver', '1');
       } else {
         peIntl.addSimpleElement('UILanguage', uiLang);
       }
@@ -744,9 +745,6 @@
       oobeIntl.addSimpleElement('SystemLocale', locale);
       oobeIntl.addSimpleElement('UILanguage', uiLang);
       oobeIntl.addSimpleElement('UserLocale', locale);
-      if (isJapaneseKeyboard) {
-        oobeIntl.addSimpleElement('LayeredDriver', '6');
-      }
     }
 
     var oobeShell = oobeSettingsElem.addChild(new XmlNode('component', {

@@ -44,7 +44,7 @@ def run_xml_generator_test():
       <SystemLocale>{sample_config['Locale']}</SystemLocale>
       <UILanguage>{sample_config['Locale']}</UILanguage>
       <UserLocale>{sample_config['Locale']}</UserLocale>
-      <LayeredDriver>6</LayeredDriver>
+      <LayeredDriver>1</LayeredDriver>
     </component>
   </settings>
   <settings pass="specialize">
@@ -59,7 +59,6 @@ def run_xml_generator_test():
       <SystemLocale>{sample_config['Locale']}</SystemLocale>
       <UILanguage>{sample_config['Locale']}</UILanguage>
       <UserLocale>{sample_config['Locale']}</UserLocale>
-      <LayeredDriver>6</LayeredDriver>
       <GeoLocation>{sample_config['GeoLocation']}</GeoLocation>
     </component>
     <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
@@ -81,7 +80,7 @@ def run_xml_generator_test():
 </unattend>"""
     
     assert "<UILanguage>ja-JP</UILanguage>" in xml_output
-    assert "<LayeredDriver>6</LayeredDriver>" in xml_output
+    assert "<LayeredDriver>1</LayeredDriver>" in xml_output
     assert "<InputLocale>0411:00000411</InputLocale>" in xml_output
     assert "<ComputerName>TEST-PC</ComputerName>" in xml_output
     assert "<Name>AdminUser</Name>" in xml_output

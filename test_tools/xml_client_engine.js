@@ -96,7 +96,7 @@
         `      <SystemLocale>${locale}</SystemLocale>`,
         `      <UILanguage>${locale}</UILanguage>`,
         `      <UserLocale>${locale}</UserLocale>`,
-        '      <LayeredDriver>6</LayeredDriver>'
+        '      <LayeredDriver>1</LayeredDriver>'
       );
     } else {
       xmlLines.push(
@@ -127,14 +127,7 @@
       `      <InputLocale>${inputLocStr}</InputLocale>`,
       `      <SystemLocale>${locale}</SystemLocale>`,
       `      <UILanguage>${locale}</UILanguage>`,
-      `      <UserLocale>${locale}</UserLocale>`
-    );
-
-    if (isJapanese) {
-      xmlLines.push('      <LayeredDriver>6</LayeredDriver>');
-    }
-
-    xmlLines.push(
+      `      <UserLocale>${locale}</UserLocale>`,
       `      <GeoLocation>${geoLoc}</GeoLocation>`,
       '    </component>',
       '    <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">',
