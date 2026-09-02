@@ -53,11 +53,17 @@ function runTest() {
   }
   console.log(' [OK] oobeSystem: <LayeredDriver> が含まれていないことを確認（スキーマ準拠）');
 
-  // 3. Specialize.ps1 のレジストリ設定
+  // 3. Specialize.ps1 & FirstLogon.ps1 のレジストリ・言語設定
   if (!xml.includes('kbd106.dll') || !xml.includes('PCAT_106KEY')) {
-    throw new Error('FAIL: Specialize.ps1 に kbd106.dll / PCAT_106KEY 設定が含まれていません');
+    throw new Error('FAIL: kbd106.dll / PCAT_106KEY 設定が含まれていません');
   }
-  console.log(' [OK] Specialize.ps1: 日本語106/109キーボード用レジストリ設定が含まれています');
+  if (!xml.includes('Keyboard Layouts\\\\00000411') && !xml.includes('Keyboard Layouts\\00000411')) {
+    throw new Error('FAIL: USB/HID用 Keyboard Layouts\\00000411 設定が含まれていません');
+  }
+  if (!xml.includes('Set-WinUserLanguageList') || !xml.includes('Set-WinDefaultInputMethodOverride')) {
+    throw new Error('FAIL: FirstLogon に Set-WinUserLanguageList / Set-WinDefaultInputMethodOverride が含まれていません');
+  }
+  console.log(' [OK] Specialize.ps1 & FirstLogon.ps1: PS/2 & USB/HID 日本語キーボード設定（多重適用）が含まれています');
 
   console.log('=== 全テストケースに合格しました ===\n');
 }
