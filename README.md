@@ -3,6 +3,7 @@
 cschneegansさまオリジナルサイト: `https://schneegans.de/windows/unattend-generator/`
 
 **CTD-Network-CO-LTD's カスタマイズサイト: https://ctd-networks-co-ltd.github.io/unattend-generator/**
+<br>※特に日本語キーボード配列の認識に修正を加えました。
 
 **1. サンプル_autounattend.xml_生成の様子**
 
