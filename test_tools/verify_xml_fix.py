@@ -41,10 +41,10 @@ def verify_autounattend_xml(file_path):
     assert "PCAT_106KEY" in content, "PCAT_106KEY の設定が見つかりません"
     assert "kbd106.dll" in content, "kbd106.dll の設定が見つかりません"
     assert "New-Item -Path $regPath -Force" in content, "レジストリキー自動作成処理が見つかりません"
-    assert "Keyboard Layouts\\00000411" in content or "Keyboard Layouts\\\\00000411" in content, "USB/HID用 Keyboard Layouts 設定が見つかりません"
-    assert "Set-WinUserLanguageList" in content, "FirstLogon での Set-WinUserLanguageList が見つかりません"
-    assert "Set-WinDefaultInputMethodOverride" in content, "Set-WinDefaultInputMethodOverride が見つかりません"
-    print(" [OK] Specialize.ps1 & FirstLogon.ps1: PS/2 & USB/HID 日本語キーボード設定（多重適用）を確認")
+    assert "New-WinUserLanguageList -Language 'ja-JP'" in content or 'New-WinUserLanguageList -Language "ja-JP"' in content, "New-WinUserLanguageList が見つかりません"
+    assert "Copy-UserInternationalSettingsToSystem -WelcomeScreen $true -NewUser $true" in content, "Copy-UserInternationalSettingsToSystem が見つかりません"
+    assert "Keyboard Layouts" not in content, "Keyboard Layouts の誤った書き換えが含まれていてはいけません"
+    print(" [OK] Specialize.ps1 & FirstLogon.ps1: 日本語106キーボード設定および全ユーザー複製（Copy-UserInternationalSettingsToSystem）を確認")
     print(f"=== {file_path} の検証完了: 全項目パス ===\n")
     return True
 

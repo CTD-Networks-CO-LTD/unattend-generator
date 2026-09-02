@@ -57,13 +57,13 @@ function runTest() {
   if (!xml.includes('kbd106.dll') || !xml.includes('PCAT_106KEY')) {
     throw new Error('FAIL: kbd106.dll / PCAT_106KEY 設定が含まれていません');
   }
-  if (!xml.includes('Keyboard Layouts\\\\00000411') && !xml.includes('Keyboard Layouts\\00000411')) {
-    throw new Error('FAIL: USB/HID用 Keyboard Layouts\\00000411 設定が含まれていません');
+  if (!xml.includes('New-WinUserLanguageList') || !xml.includes('Copy-UserInternationalSettingsToSystem')) {
+    throw new Error('FAIL: FirstLogon に New-WinUserLanguageList / Copy-UserInternationalSettingsToSystem が含まれていません');
   }
-  if (!xml.includes('Set-WinUserLanguageList') || !xml.includes('Set-WinDefaultInputMethodOverride')) {
-    throw new Error('FAIL: FirstLogon に Set-WinUserLanguageList / Set-WinDefaultInputMethodOverride が含まれていません');
+  if (xml.includes('Keyboard Layouts')) {
+    throw new Error('FAIL: Keyboard Layouts の誤った書き換えが含まれています');
   }
-  console.log(' [OK] Specialize.ps1 & FirstLogon.ps1: PS/2 & USB/HID 日本語キーボード設定（多重適用）が含まれています');
+  console.log(' [OK] Specialize.ps1 & FirstLogon.ps1: 日本語106キーボード設定および全ユーザー複製（Copy-UserInternationalSettingsToSystem）が含まれています');
 
   console.log('=== 全テストケースに合格しました ===\n');
 }
