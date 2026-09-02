@@ -1,8 +1,20 @@
-# UnattendGenerator (Forked by CTD-Network-CO-LTD：工事中)
+# UnattendGenerator (Forked by CTD-Network-CO-LTD)
 
-cschneegansさまオリジナルサイト: https://schneegans.de/windows/unattend-generator/
+cschneegansさまオリジナルサイト: `https://schneegans.de/windows/unattend-generator/`
 
-**CTD-Network-CO-LTD's カスタマイズサイト: https://ctd-networks-co-ltd.github.io/unattend-generator/**
+### CTD-Network-CO-LTD's カスタマイズサイト: https://ctd-networks-co-ltd.github.io/unattend-generator/
+
+**1. サンプル_autounattend.xml_生成の様子**
+
+https://github.com/user-attachments/assets/f9b98d85-3cf4-421b-b8fe-5b79212971d0
+
+**2. サンプル_autounattend.xml（ZIP圧縮）**
+<br>[サンプル_autounattend.xml.zip](https://github.com/user-attachments/files/31733749/_autounattend.xml.zip)
+<br>このサンプルに設定してあるログインパスワード（Passw@rd）は脆弱です。このまま運用に利用しないでください。
+
+**3. Win11Pro自動インストールの様子**
+
+https://github.com/user-attachments/assets/2ffeee9d-7f16-4aee-9ece-d4f05dfa9693
 
 ---
 
