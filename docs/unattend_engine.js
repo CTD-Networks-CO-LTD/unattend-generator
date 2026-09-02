@@ -359,6 +359,7 @@
     var locale = getVal('Locale', 'en-US');
     var keyboard = getVal('Keyboard', '00000409');
     var geoLoc = getVal('GeoLocation', '244');
+    var isJapaneseKeyboard = (keyboard === '00000411' || keyboard.indexOf('0411:') === 0 || locale === 'ja-JP' || uiLang === 'ja-JP');
 
     // PE Settings
     var peMode = getVal('PEMode', 'Default');
@@ -570,6 +571,18 @@
       firstLogonScript.invokeFile('C:\\Windows\\Setup\\Scripts\\VirtIoGuestTools.ps1');
     }
 
+    if (isJapaneseKeyboard) {
+      specializeScript.append([
+        "$regPath = 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\i8042prt\\Parameters';",
+        "if (Test-Path $regPath) {",
+        "    Set-ItemProperty -Path $regPath -Name 'LayerDriver JPN' -Value 'kbd106.dll' -Type String -Force;",
+        "    Set-ItemProperty -Path $regPath -Name 'OverrideKeyboardIdentifier' -Value 'PCAT_106KEY' -Type String -Force;",
+        "    Set-ItemProperty -Path $regPath -Name 'OverrideKeyboardSubtype' -Value 2 -Type DWord -Force;",
+        "    Set-ItemProperty -Path $regPath -Name 'OverrideKeyboardType' -Value 7 -Type DWord -Force;",
+        "}"
+      ].join('\r\n'));
+    }
+
     // Finalize PowerShell sequences into embedded files
     if (!userOnceScript.isEmpty()) {
       var userOnceFile = embedTextFile('UserOnce.ps1', userOnceScript.getScript());
@@ -611,7 +624,20 @@
         'language': 'neutral',
         'versionScope': 'nonSxS'
       }));
-      peIntl.addSimpleElement('UILanguage', uiLang);
+      if (isJapaneseKeyboard) {
+        var peInputLocStr = keyboard;
+        if (keyboard.indexOf('{') === -1 && keyboard.length === 8) {
+          var peLcidPrefix = keyboard.substring(4);
+          peInputLocStr = peLcidPrefix + ':' + keyboard;
+        }
+        peIntl.addSimpleElement('InputLocale', peInputLocStr);
+        peIntl.addSimpleElement('SystemLocale', locale);
+        peIntl.addSimpleElement('UILanguage', uiLang);
+        peIntl.addSimpleElement('UserLocale', locale);
+        peIntl.addSimpleElement('LayeredDriver', '6');
+      } else {
+        peIntl.addSimpleElement('UILanguage', uiLang);
+      }
     }
 
     var winSetup = peSettingsElem.addChild(new XmlNode('component', {
@@ -718,6 +744,9 @@
       oobeIntl.addSimpleElement('SystemLocale', locale);
       oobeIntl.addSimpleElement('UILanguage', uiLang);
       oobeIntl.addSimpleElement('UserLocale', locale);
+      if (isJapaneseKeyboard) {
+        oobeIntl.addSimpleElement('LayeredDriver', '6');
+      }
     }
 
     var oobeShell = oobeSettingsElem.addChild(new XmlNode('component', {
