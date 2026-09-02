@@ -6,7 +6,7 @@ This project is forked from `https://github.com/cschneegans/unattend-generator`
 ---
 Modifications Copyright (c) 2026 CTD Networks CO., LTD.
 
-**CTD-Network-CO-LTD's カスタマイズサイト: https://ctd-networks-co-ltd.github.io/unattend-generator/**
+**CTD-Network-CO-LTD's カスタマイズサイト: https://ctd-networks-co-ltd.github.io/unattend-generator_ja-JP/**
 <br>※特に日本語キーボード配列の認識に修正を加えました。
 
 **1. サンプル_autounattend.xml_生成の様子**
