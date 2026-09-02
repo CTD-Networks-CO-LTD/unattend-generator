@@ -106,11 +106,7 @@ if (!(Test-Path $regPath)) {
 Set-ItemProperty -Path $regPath -Name 'LayerDriver JPN' -Value 'kbd106.dll' -Type String -Force;
 Set-ItemProperty -Path $regPath -Name 'OverrideKeyboardIdentifier' -Value 'PCAT_106KEY' -Type String -Force;
 Set-ItemProperty -Path $regPath -Name 'OverrideKeyboardSubtype' -Value 2 -Type DWord -Force;
-Set-ItemProperty -Path $regPath -Name 'OverrideKeyboardType' -Value 7 -Type DWord -Force;
-$regKbdLayout = 'HKLM:\SYSTEM\CurrentControlSet\Control\Keyboard Layouts\00000411';
-if (Test-Path $regKbdLayout) {
-    Set-ItemProperty -Path $regKbdLayout -Name 'Layout File' -Value 'kbd106.dll' -Type String -Force;
-}");
+Set-ItemProperty -Path $regPath -Name 'OverrideKeyboardType' -Value 7 -Type DWord -Force;");
 
             FirstLogonScript.Append(@"$regPath = 'HKLM:\SYSTEM\CurrentControlSet\Services\i8042prt\Parameters';
 if (!(Test-Path $regPath)) {
@@ -120,18 +116,10 @@ Set-ItemProperty -Path $regPath -Name 'LayerDriver JPN' -Value 'kbd106.dll' -Typ
 Set-ItemProperty -Path $regPath -Name 'OverrideKeyboardIdentifier' -Value 'PCAT_106KEY' -Type String -Force;
 Set-ItemProperty -Path $regPath -Name 'OverrideKeyboardSubtype' -Value 2 -Type DWord -Force;
 Set-ItemProperty -Path $regPath -Name 'OverrideKeyboardType' -Value 7 -Type DWord -Force;
-$regKbdLayout = 'HKLM:\SYSTEM\CurrentControlSet\Control\Keyboard Layouts\00000411';
-if (Test-Path $regKbdLayout) {
-    Set-ItemProperty -Path $regKbdLayout -Name 'Layout File' -Value 'kbd106.dll' -Type String -Force;
-}
 try {
-    $langList = Get-WinUserLanguageList;
-    if ($langList.Count -gt 0) {
-        $langList[0].InputMethodTips.Clear();
-        $langList[0].InputMethodTips.Add('0411:00000411');
-        Set-WinUserLanguageList -LanguageList $langList -Force;
-    }
-    Set-WinDefaultInputMethodOverride -InputTip '0411:00000411';
+    $langList = New-WinUserLanguageList -Language 'ja-JP';
+    Set-WinUserLanguageList -LanguageList $langList -Force;
+    Copy-UserInternationalSettingsToSystem -WelcomeScreen $true -NewUser $true;
 } catch {}");
           }
           else
