@@ -1,4 +1,4 @@
-# UnattendGenerator (Forked by CTD-Network-CO-LTD)
+# UnattendGenerator ja-JP (Forked by CTD-Network-CO-LTD)
 
 This project is forked from `https://github.com/cschneegans/unattend-generator`
 <br>cschneegansさまオリジナルサイト: `https://schneegans.de/windows/unattend-generator/`
