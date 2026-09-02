@@ -70,6 +70,11 @@ function Run-Individual-Button-Test {
     }
 }
 
+function Run-E2E-Engine-Test {
+    Write-Host "`nXML生成・ダウンロード・インポートエンジンのテストを実行中..." -ForegroundColor Cyan
+    python (Join-Path $toolsDir "test_e2e_engine.py")
+}
+
 # メインループ
 while ($true) {
     $serverRunning = Check-Server-Status
@@ -83,7 +88,8 @@ while ($true) {
     Write-Host " 1. ローカルテストサーバー起動 & ブラウザで開く"
     Write-Host " 2. 全ボタン・フォームの一括URL検証テスト"
     Write-Host " 3. 個別ボタンの動作・パラメータ確認"
-    Write-Host " 4. ローカルテストサーバー停止"
+    Write-Host " 4. XML生成・ダウンロードエンジンの検証テスト"
+    Write-Host " 5. ローカルテストサーバー停止"
     Write-Host " 0. 終了"
     Write-Host "--------------------------------------------------------"
 
@@ -92,7 +98,8 @@ while ($true) {
         "1" { Start-Test-Server }
         "2" { Run-Button-Verification }
         "3" { Run-Individual-Button-Test }
-        "4" { Stop-Test-Server }
+        "4" { Run-E2E-Engine-Test }
+        "5" { Stop-Test-Server }
         "0" { 
             Write-Host "テストツールを終了します。" -ForegroundColor Cyan
             exit 0 
