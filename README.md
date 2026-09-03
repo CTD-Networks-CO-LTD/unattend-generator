@@ -15,7 +15,8 @@ https://github.com/user-attachments/assets/f9b98d85-3cf4-421b-b8fe-5b79212971d0
 
 **2. サンプル_autounattend.xml（ZIP圧縮）**
 <br>[サンプル_autounattend.xml.zip](https://github.com/user-attachments/files/31733749/_autounattend.xml.zip)
-<br>このサンプルに設定してあるログインパスワード（Passw@rd）は脆弱です。このまま運用に利用しないでください。
+> [!WARNING]
+> このサンプルに設定してあるログインパスワード（Passw@rd）は脆弱です。このまま運用に利用しないでください。
 
 **3. Win11Pro自動インストールの様子**
 
